@@ -1,0 +1,31 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+}
+
+.site {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.site p {
+    margin: 0;
+    margin-left: 10px;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
