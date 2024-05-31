@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Site Checker</title>
+    <style>
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+        .site {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container" id="siteContainer">
@@ -12,8 +23,9 @@
     </div>
     <script>
         const sites = [
-            "https://www.amazon.com",
-            // ... other sites
+            "https://kittychan.xyz",
+            "https://educonnect.education.gouv.fr/idp/profile/SAML2/Redirect/",
+            "https://0352533n.pronote.toutatice.fr"
         ];
 
         function checkSites() {
@@ -26,40 +38,57 @@
 
                 const status = document.createElement('div');
                 const siteName = document.createElement('p');
+                const statusText = document.createElement('p');
                 siteDiv.appendChild(status);
                 siteDiv.appendChild(siteName);
+                siteDiv.appendChild(statusText);
 
                 container.appendChild(siteDiv);
 
                 // Check site status
-                checkSiteStatus(site, status, siteName);
+                checkSiteStatus(site, status, siteName, statusText);
             });
         }
 
-        function checkSiteStatus(site, statusElement, nameElement) {
+        function checkSiteStatus(site, statusElement, nameElement, statusTextElement) {
             const startTime = new Date().getTime();
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(site)}`;
 
             const xhr = new XMLHttpRequest();
-            xhr.open('HEAD', site, true);
+            xhr.open('GET', proxyUrl, true);
             xhr.onload = function() {
                 const endTime = new Date().getTime();
                 const responseTime = endTime - startTime;
 
                 if (xhr.status >= 200 && xhr.status < 400) {
-                    statusElement.textContent = '•';
-                    statusElement.classList.add('green');
-                    nameElement.textContent = `${site} - ${responseTime} ms`;
+                    const responseData = JSON.parse(xhr.responseText);
+                    if (responseData.contents.includes('405 Method Not Allowed')) {
+                        statusElement.textContent = '•';
+                        statusElement.classList.add('green');
+                        nameElement.textContent = `${site} - ${responseTime} ms`;
+                        statusTextElement.textContent = 'Site en ligne';
+                        statusTextElement.classList.add('green');
+                    } else {
+                        statusElement.textContent = '•';
+                        statusElement.classList.add('green');
+                        nameElement.textContent = `${site} - ${responseTime} ms`;
+                        statusTextElement.textContent = 'Site en ligne';
+                        statusTextElement.classList.add('green');
+                    }
                 } else {
                     statusElement.textContent = '•';
-                statusElement.classList.add('red');
+                    statusElement.classList.add('red');
                     nameElement.textContent = `${site} - ${xhr.status} ${xhr.statusText}`;
+                    statusTextElement.textContent = 'Site hors ligne';
+                    statusTextElement.classList.add('red');
                 }
             };
             xhr.onerror = function() {
                 statusElement.textContent = '•';
                 statusElement.classList.add('red');
                 nameElement.textContent = `${site} - Unreachable`;
-
+                statusTextElement.textContent = 'Site hors ligne';
+                statusTextElement.classList.add('red');
                 console.log(`${site} timed out`);
             };
 
