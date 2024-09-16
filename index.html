@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container" id="siteContainer">
-        <!-- Sites will be dynamically added here -->
+        <!-- C.E.R.N LABS -->
     </div>
     <script>
         const sites = [
@@ -31,7 +31,7 @@
 
         function checkSites() {
             const container = document.getElementById('siteContainer');
-            container.innerHTML = ''; // Clear previous content
+            container.innerHTML = ''; 
 
             sites.forEach(site => {
                 const siteDiv = document.createElement('div');
@@ -46,7 +46,7 @@
 
                 container.appendChild(siteDiv);
 
-                // Check site status
+                
                 checkSiteStatus(site, status, siteName, statusText);
             });
         }
@@ -96,10 +96,10 @@
             xhr.send();
         }
 
-        // Check sites every minute
+        
         setInterval(checkSites, 60000);
 
-        // Initial check
+        
         checkSites();
     </script>
 </body>
